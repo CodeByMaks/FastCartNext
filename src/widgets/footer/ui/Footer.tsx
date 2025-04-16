@@ -1,21 +1,28 @@
+"use client"
+
 import { Mail, Send } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+import { useTranslations } from 'next-intl'
+import { usePathname } from 'next/navigation'
 
 const Footer = () => {
+  const t = useTranslations()
+  const pathname = usePathname()
+  const locale = pathname.split('/')[1]
+
   return (
 	<footer className="bg-black text-white w-full py-8 px-4">
 	<div className="w-[90%] container mx-auto">
 	  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-		 {/* Exclusive Column */}
 		 <div className="space-y-5">
-			<h3 className="text-lg font-semibold">Exclusive</h3>
-			<p>Subscribe</p>
-			<p className="text-sm">Get 10% off your first order</p>
+			<h3 className="text-lg font-semibold">{t('Exclusive')}</h3>
+			<p>{t('Subscribe')}</p>
+			<p className="text-sm">{t('GetDiscount')}</p>
 			<div className="flex items-center relative">
 			  <input
 				 type="email"
-				 placeholder="Enter your email"
+				 placeholder={t('EnterEmail')}
 				 className="bg-transparent border-2 border-white rounded-none pl-2 pr-10 py-5 h-10 text-white placeholder:text-gray-400"
 			  />
 			  <button className="absolute right-5 text-white">
@@ -24,62 +31,57 @@ const Footer = () => {
 			</div>
 		 </div>
 
-		 {/* Support Column */}
 		 <div className="space-y-4">
-			<h3 className="text-lg font-semibold">Support</h3>
+			<h3 className="text-lg font-semibold">{t('Support')}</h3>
 			<p className="text-sm">
-			  111 Bijoy sarani, Dhaka,
-			  <br />
-			  DH 1515, Bangladesh.
+			  {t('Address')}
 			</p>
 			<p className="text-sm flex items-center gap-2">
 			  <Mail size={16} />
-			  exclusive@gmail.com
+			  {t('Email')}
 			</p>
-			<p className="text-sm">+88015-88888-9999</p>
+			<p className="text-sm">{t('Phone')}</p>
 		 </div>
 
-		 {/* Account Column */}
 		 <div className="space-y-4">
-			<h3 className="text-lg font-semibold">Account</h3>
+			<h3 className="text-lg font-semibold">{t('Account')}</h3>
 			<ul className="space-y-5 text-sm">
 			  <li>
-				 <Link href="#">My Account</Link>
+				 <Link href={`/${locale}/account`}>{t('MyAccount')}</Link>
 			  </li>
 			  <li>
-				 <Link href="#">Cart</Link>
+				 <Link href={`/${locale}/cart`}>{t('Cart')}</Link>
 			  </li>
 			  <li>
-				 <Link href="#">Wishlist</Link>
+				 <Link href={`/${locale}/wishlist`}>{t('Wishlist')}</Link>
 			  </li>
 			  <li>
-				 <Link href="#">Shop</Link>
+				 <Link href={`/${locale}/shop`}>{t('Shop')}</Link>
 			  </li>
 			</ul>
 		 </div>
 
-		 {/* Quick Link Column */}
 		 <div className="space-y-4">
-			<h3 className="text-lg font-semibold">Quick Link</h3>
+			<h3 className="text-lg font-semibold">{t('QuickLink')}</h3>
 			<ul className="space-y-5 text-sm">
 			  <li>
-				 <Link href="#">Privacy Policy</Link>
+				 <Link href={`/${locale}/privacy`}>{t('PrivacyPolicy')}</Link>
 			  </li>
 			  <li>
-				 <Link href="#">Terms Of Use</Link>
+				 <Link href={`/${locale}/terms`}>{t('TermsOfUse')}</Link>
 			  </li>
 			  <li>
-				 <Link href="#">FAQ</Link>
+				 <Link href={`/${locale}/faq`}>{t('FAQ')}</Link>
 			  </li>
 			  <li>
-				 <Link href="#">Contact</Link>
+				 <Link href={`/${locale}/contact`}>{t('Contact')}</Link>
 			  </li>
 			</ul>
 		 </div>
 
 		 {/* Social Column */}
 		 <div className="space-y-4">
-			<h3 className="text-lg font-semibold">Social</h3>
+			<h3 className="text-lg font-semibold">{t('Social')}</h3>
 			<div className="flex gap-4">
 			  <Link href="#" aria-label="Facebook">
 				 <svg
@@ -153,9 +155,8 @@ const Footer = () => {
 		 </div>
 	  </div>
 
-	  {/* Copyright */}
 	  <div className="mt-12 text-center border-t border-gray-800 pt-5 text-sm text-gray-600">
-		 <p>© Copyright Rimel 2022. All right reserved.</p>
+		 <p>{t('Copyright')}</p>
 	  </div>
 	</div>
  </footer>

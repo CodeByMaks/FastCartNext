@@ -32,7 +32,7 @@ export default function LocaleLayout({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Next.js App</title>
+        <title>FastCart</title>
       </head>
       <body className="antialiased min-h-screen">
         <NextIntlClientProvider locale={typedLocale} messages={messages}>

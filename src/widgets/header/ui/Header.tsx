@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image'
 import logo from '@/assets/Group 1116606595.png'
-import { Heart, Search, ShoppingCart } from 'lucide-react'
+import { Heart, Search, ShoppingCart, User } from 'lucide-react'
 import { LanguageSelect } from '@/features/language-switcher/LanguageSelect'
 
 export const Header = () => {
@@ -31,6 +31,7 @@ export const Header = () => {
           </div>
           <Heart />
           <ShoppingCart />
+          <User />
         </div>
       </div>
     </header>
