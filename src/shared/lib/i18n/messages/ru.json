@@ -21,5 +21,22 @@
 	"TermsOfUse": "Условия использования",
 	"FAQ": "Частые вопросы",
 	"Social": "Социальные сети",
-	"Copyright": "© Copyright Rimel 2022. Все права защищены."
+	"Copyright": "© Copyright Rimel 2022. Все права защищены.",
+	"ContactPage": {
+		"Home": "Главная",
+		"Contact": "Контакты",
+		"CallToUs": "Позвоните нам",
+		"Available": "Мы доступны 24/7, 7 дней в неделю.",
+		"Phone": "Телефон: +18016111222",
+		"WriteToUs": "Напишите нам",
+		"FormInfo": "Заполните форму, и мы свяжемся с вами в течение 24 часов.",
+		"CustomerEmail": "Email: customer@exclusive.com",
+		"SupportEmail": "Email: support@exclusive.com",
+		"Name": "Имя",
+		"Email": "Email",
+		"PhoneInput": "Телефон",
+		"Message": "Ваше сообщение",
+		"SendMessage": "Отправить сообщение",
+		"MessageSent": "Сообщение успешно отправлено!"
+	}
 }

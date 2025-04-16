@@ -21,5 +21,22 @@
 	"TermsOfUse": "Шартҳои истифода",
 	"FAQ": "Саволҳои зиёд",
 	"Social": "Сомонаҳои иҷтимоӣ",
-	"Copyright": "© Copyright Rimel 2022. Ҳама ҳуқуқҳо ҳифз шудаанд."
+	"Copyright": "© Copyright Rimel 2022. Ҳама ҳуқуқҳо ҳифз шудаанд.",
+	"ContactPage": {
+		"Home": "Асосӣ",
+		"Contact": "Тамос",
+		"CallToUs": "Ба мо занг занед",
+		"Available": "Мо 24/7, 7 рӯзи ҳафта дастрас ҳастем.",
+		"Phone": "Телефон: +18016111222",
+		"WriteToUs": "Ба мо нависед",
+		"FormInfo": "Формаро пур кунед ва мо дар давоми 24 соат бо шумо тамос мегирем.",
+		"CustomerEmail": "Email: customer@exclusive.com",
+		"SupportEmail": "Email: support@exclusive.com",
+		"Name": "Ном",
+		"Email": "Email",
+		"PhoneInput": "Телефон",
+		"Message": "Паёми шумо",
+		"SendMessage": "Фиристодани паём",
+		"MessageSent": "Паём бо муваффақият фиристода шуд!"
+	}
 }

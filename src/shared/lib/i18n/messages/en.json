@@ -21,5 +21,22 @@
 	"TermsOfUse": "Terms Of Use",
 	"FAQ": "FAQ",
 	"Social": "Social",
-	"Copyright": "© Copyright Rimel 2022. All right reserved."
+	"Copyright": "© Copyright Rimel 2022. All right reserved.",
+	"ContactPage": {
+		"Home": "Home",
+		"Contact": "Contact",
+		"CallToUs": "Call To Us",
+		"Available": "We are available 24/7, 7 days a week.",
+		"Phone": "Phone: +18016111222",
+		"WriteToUs": "Write To US",
+		"FormInfo": "Fill out our form and we will contact you within 24 hours.",
+		"CustomerEmail": "Email: customer@exclusive.com",
+		"SupportEmail": "Email: support@exclusive.com",
+		"Name": "Name",
+		"Email": "Email",
+		"PhoneInput": "Phone",
+		"Message": "Your Message",
+		"SendMessage": "Send Message",
+		"MessageSent": "Message sent successfully!"
+	}
 }

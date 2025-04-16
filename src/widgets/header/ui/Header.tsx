@@ -17,7 +17,7 @@ export const Header = () => {
     <header className="py-4 border-b-2">
       <div className='w-[85%] m-auto flex justify-between items-center'>
         <Image src={logo} alt ='' />
-        <nav className="flex gap-10 text-[18px]">
+        <nav className="flex gap-10 text-[16px]">
           <Link href={`/${locale}`}>{t('Home')}</Link>
           <Link href={`/${locale}/contact`}>{t('Contact')}</Link>
           <Link href={`/${locale}/about`}>{t('About')}</Link>
