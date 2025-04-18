@@ -23,7 +23,8 @@ const Footer = () => {
 			  <input
 				 type="email"
 				 placeholder={t('EnterEmail')}
-				 className="bg-transparent border-2 border-white rounded-none pl-2 pr-10 py-5 h-10 text-white placeholder:text-gray-400"
+				 className="bg-transparent border-2 border-white rounded-2xl
+				  pl-2 pr-10 py-5 h-10 text-white placeholder:text-gray-400"
 			  />
 			  <button className="absolute right-5 text-white">
 				 <Send size={16} />
@@ -47,16 +48,16 @@ const Footer = () => {
 			<h3 className="text-lg font-semibold">{t('Account')}</h3>
 			<ul className="space-y-5 text-sm">
 			  <li>
-				 <Link href={`/${locale}/account`}>{t('MyAccount')}</Link>
+				 <Link href={`/${locale}`}>{t('MyAccount')}</Link>
 			  </li>
 			  <li>
-				 <Link href={`/${locale}/cart`}>{t('Cart')}</Link>
+				 <Link href={`/${locale}`}>{t('Cart')}</Link>
 			  </li>
 			  <li>
-				 <Link href={`/${locale}/wishlist`}>{t('Wishlist')}</Link>
+				 <Link href={`/${locale}`}>{t('Wishlist')}</Link>
 			  </li>
 			  <li>
-				 <Link href={`/${locale}/shop`}>{t('Shop')}</Link>
+				 <Link href={`/${locale}`}>{t('Shop')}</Link>
 			  </li>
 			</ul>
 		 </div>
@@ -65,16 +66,16 @@ const Footer = () => {
 			<h3 className="text-lg font-semibold">{t('QuickLink')}</h3>
 			<ul className="space-y-5 text-sm">
 			  <li>
-				 <Link href={`/${locale}/privacy`}>{t('PrivacyPolicy')}</Link>
+				 <Link href={`/${locale}`}>{t('PrivacyPolicy')}</Link>
 			  </li>
 			  <li>
-				 <Link href={`/${locale}/terms`}>{t('TermsOfUse')}</Link>
+				 <Link href={`/${locale}`}>{t('TermsOfUse')}</Link>
 			  </li>
 			  <li>
-				 <Link href={`/${locale}/faq`}>{t('FAQ')}</Link>
+				 <Link href={`/${locale}`}>{t('FAQ')}</Link>
 			  </li>
 			  <li>
-				 <Link href={`/${locale}/contact`}>{t('Contact')}</Link>
+				 <Link href={`/${locale}`}>{t('Contact')}</Link>
 			  </li>
 			</ul>
 		 </div>
