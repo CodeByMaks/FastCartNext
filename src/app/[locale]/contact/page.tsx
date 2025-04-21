@@ -1,5 +1,5 @@
-import ContactForm from '@/features/contact/contact-form'
-import ContactInfo from '@/features/contact/contact-info'
+import ContactForm from '@/widgets/contact/contact-form'
+import ContactInfo from '@/widgets/contact/contact-info'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 

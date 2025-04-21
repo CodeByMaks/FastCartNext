@@ -1,15 +1,33 @@
 'use client';
 
-export default function Home() {
+import { BestProducts } from '@/features/best-products/best-products'
+import CategorySwiper from '@/features/category-swiper/category-swiper'
+import ExploreProducts from '@/features/exploreProducts/explore-products'
+import FlashSales from '@/features/flash-sales/flash-sales'
+import SpeakerPromo from '@/features/speaker-promo/speaker-promo'
+import NewArrivalSection from '@/widgets/home/new-arrival-section'
 
+export default function Home() {
   return (
     <>
       <section>
           
       </section>
+
+      <FlashSales />
+
+      <CategorySwiper />
+
+      <BestProducts />
+
+      <SpeakerPromo />
+
+      <ExploreProducts />
+
+      <NewArrivalSection />
     
       <section>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="py-16 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="flex flex-col items-center text-center">
           <div className="bg-gray-100 rounded-full p-4 mb-4">
             <svg

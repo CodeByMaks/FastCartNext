@@ -1,6 +1,6 @@
 "use client"
 
-import ProfileForm from "@/features/profile/profile-form"
+import ProfileForm from "@/widgets/profile/profile-form"
 import Link from 'next/link'
 
 export default function AccountPage() {

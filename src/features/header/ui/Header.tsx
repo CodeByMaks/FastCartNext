@@ -1,7 +1,7 @@
 'use client'
 
 import logo from '@/assets/Group 1116606595.png'
-import { LanguageSelect } from '@/features/language-switcher/LanguageSelect'
+import { LanguageSelect } from '@/widgets/language-switcher/LanguageSelect'
 import {
 	Heart,
 	LogOut,
@@ -109,8 +109,12 @@ export const Header = () => {
 					</div>
 
 					<div className='flex gap-2 sm:gap-4 items-center relative'>
-						<Heart size={20} className='flex-shrink-0 cursor-pointer' />
-						<ShoppingCart size={20} className='flex-shrink-0 cursor-pointer' />
+						<Link href={`/${locale}/wishlist`}>
+							<Heart size={20} className='flex-shrink-0 cursor-pointer' />
+						</Link>
+						<Link href={`/${locale}/cart`}>
+							<ShoppingCart size={20} className='flex-shrink-0 cursor-pointer' />
+						</Link>
 						<div className='relative'>
 							<div
 								className='user-icon rounded-full p-2 hover:bg-red-500 hover:text-white cursor-pointer'

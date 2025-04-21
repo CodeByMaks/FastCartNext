@@ -2,12 +2,12 @@ import { notFound } from 'next/navigation'
 import { NextIntlClientProvider } from 'next-intl'
 import { ReactNode } from 'react'
 import { locales, type Locale } from '@/shared/lib/i18n'
-import { Header } from '@/widgets/header/ui/Header'
 import en from '@/shared/lib/i18n/messages/en.json'
 import ru from '@/shared/lib/i18n/messages/ru.json'
 import tj from '@/shared/lib/i18n/messages/tj.json'
 import '@/app/globals.css'
-import Footer from '@/widgets/footer/ui/Footer'
+import Footer from '@/features/footer/ui/Footer'
+import { Header } from '@/features/header/ui/Header'
 
 const messagesMap = { en, ru, tj }
 
