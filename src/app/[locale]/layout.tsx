@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-import { NextIntlClientProvider } from 'next-intl'
 import { ReactNode } from 'react'
 import { locales, type Locale } from '@/shared/lib/i18n'
 import en from '@/shared/lib/i18n/messages/en.json'
@@ -8,6 +7,7 @@ import tj from '@/shared/lib/i18n/messages/tj.json'
 import '@/app/globals.css'
 import Footer from '@/features/footer/ui/Footer'
 import { Header } from '@/features/header/ui/Header'
+import { Providers } from '../Providers'
 
 const messagesMap = { en, ru, tj }
 
@@ -35,15 +35,13 @@ export default function LocaleLayout({
         <title>FastCart</title>
       </head>
       <body className="antialiased min-h-screen">
-        <NextIntlClientProvider locale={typedLocale} messages={messages}>
+        <Providers locale={typedLocale} messages={messages}>
           <div className="flex flex-col min-h-screen">
             <Header />
-            <main className="flex-grow">
-              {children}
-            </main>
+            <main className="flex-grow">{children}</main>
             <Footer />
           </div>
-        </NextIntlClientProvider>
+        </Providers>
       </body>
     </html>
   )

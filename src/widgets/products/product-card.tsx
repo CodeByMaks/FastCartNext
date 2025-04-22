@@ -1,26 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { Heart, Eye } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/utils"
 
-interface ProductProps {
-  product: {
-    id: number
-    name: string
-    price: number
-    rating: number
-    reviews: number
-    image: string
-    isNew?: boolean
-    colors?: string[]
-    addToCart?: boolean
-  }
-}
-
-export default function ProductCard({ product }: ProductProps) {
+export default function ProductCard({product}) {
   const [isWishlisted, setIsWishlisted] = useState(false)
 
   return (
@@ -31,9 +17,9 @@ export default function ProductCard({ product }: ProductProps) {
         )}
 
         <div className="relative">
-          <Image
-            src={product.image || "/placeholder.svg"}
-            alt={product.name}
+          <img
+            src={`https://store-api.softclub.tj/images/${product.image}`}
+            alt={product.productName}
             width={200}
             height={200}
             className="mx-auto object-contain h-40 w-full"
@@ -59,37 +45,28 @@ export default function ProductCard({ product }: ProductProps) {
       </div>
 
       <div className="p-4">
-        <h3 className="font-medium text-sm mb-1">{product.name}</h3>
+        <h3 className="font-medium text-sm mb-1">{product.productName}</h3>
         <div className="flex justify-between items-center mb-2">
-          <span className="text-red-500 font-bold">${product.price}</span>
+          <div className='flex gap-3'>
+          <span className="text-red-500 font-bold">${product.discountPrice}</span>
+          <span className="text-gray-400 line-through font-bold">${product.price}</span>
+          </div>
           <div className="flex items-center">
             <div className="flex">
               {Array.from({ length: 5 }).map((_, i) => (
                 <svg
                   key={i}
                   className={`w-4 h-4 ${i < product.rating ? "text-yellow-400" : "text-gray-300"}`}
-                  fill="currentColor"
+                  fill="orange"
                   viewBox="0 0 20 20"
                 >
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
               ))}
             </div>
-            <span className="text-xs text-gray-500 ml-1">({product.reviews})</span>
+            <span className="text-xs text-gray-500 ml-1">38</span>
           </div>
         </div>
-
-        {product.colors && (
-          <div className="flex gap-1 mt-2">
-            {product.colors.map((color, index) => (
-              <div
-                key={index}
-                className="w-5 h-5 rounded-full border border-gray-300"
-                style={{ backgroundColor: color }}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </div>
   )

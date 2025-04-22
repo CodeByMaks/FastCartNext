@@ -4,15 +4,14 @@ import { BestProducts } from '@/features/best-products/best-products'
 import CategorySwiper from '@/features/category-swiper/category-swiper'
 import ExploreProducts from '@/features/exploreProducts/explore-products'
 import FlashSales from '@/features/flash-sales/flash-sales'
+import { ProductSlider } from '@/features/product-slider/product-slider'
 import SpeakerPromo from '@/features/speaker-promo/speaker-promo'
 import NewArrivalSection from '@/widgets/home/new-arrival-section'
 
 export default function Home() {
   return (
     <>
-      <section>
-          
-      </section>
+      <ProductSlider />
 
       <FlashSales />
 

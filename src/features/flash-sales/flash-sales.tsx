@@ -1,34 +1,25 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
 import { Heart, Eye } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/utils"
-
-// Import Swiper styles
 import "swiper/css"
 import "swiper/css/navigation"
-
-interface Product {
-  id: string
-  name: string
-  currentPrice: number
-  originalPrice: number
-  discount: number
-  image: string
-  rating: number
-  reviews: number
-}
+import { useGetProductsQuery } from '@/entities/products/productsApi'
 
 export default function FlashSales() {
   const [days, setDays] = useState(3)
   const [hours, setHours] = useState(23)
   const [minutes, setMinutes] = useState(19)
   const [seconds, setSeconds] = useState(56)
+  const [isWishlisted, setIsWishlisted] = useState(false)
 
+  const {data, isLoading, error} = useGetProductsQuery(undefined)
+  
   // Countdown timer logic
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,63 +45,17 @@ export default function FlashSales() {
     return () => clearInterval(interval)
   }, [days, hours, minutes, seconds])
 
-  // Sample product data
-  const products: Product[] = [
-    {
-      id: "1",
-      name: "HAVIT HV-G92 Gamepad",
-      currentPrice: 120,
-      originalPrice: 160,
-      discount: 40,
-      image: "/placeholder.svg?height=200&width=200",
-      rating: 5,
-      reviews: 88,
-    },
-    {
-      id: "2",
-      name: "AK-900 Wired Keyboard",
-      currentPrice: 960,
-      originalPrice: 1160,
-      discount: 35,
-      image: "/placeholder.svg?height=200&width=200",
-      rating: 4,
-      reviews: 75,
-    },
-    {
-      id: "3",
-      name: "IPS LCD Gaming Monitor",
-      currentPrice: 370,
-      originalPrice: 400,
-      discount: 30,
-      image: "/placeholder.svg?height=200&width=200",
-      rating: 5,
-      reviews: 99,
-    },
-    {
-      id: "4",
-      name: "S-Series Comfort Chair",
-      currentPrice: 375,
-      originalPrice: 400,
-      discount: 25,
-      image: "/placeholder.svg?height=200&width=200",
-      rating: 4.5,
-      reviews: 99,
-    },
-    {
-      id: "5",
-      name: "S-Series Comfort Chair",
-      currentPrice: 375,
-      originalPrice: 400,
-      discount: 25,
-      image: "/placeholder.svg?height=200&width=200",
-      rating: 4.5,
-      reviews: 99,
-    },
-  ]
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error loading products</div>
 
   // Format time units to always show two digits
   const formatTimeUnit = (unit: number) => {
     return unit.toString().padStart(2, "0")
+  }
+
+  // Calculate discount percentage
+  const calculateDiscountPercentage = (price: number, discountPrice: number) => {
+    return Math.round(((price - discountPrice) / price) * 100)
   }
 
   // Render star ratings
@@ -121,7 +66,7 @@ export default function FlashSales() {
         <svg
           key={i}
           className={cn("w-4 h-4", i < Math.floor(rating) ? "text-yellow-400" : "text-gray-300")}
-          fill="currentColor"
+          fill="orange"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -132,9 +77,10 @@ export default function FlashSales() {
 
   return (
     <div className="w-[85%] container mx-auto px-4 py-8">
-      <div className="flex items-center mb-4">
-        <div className="bg-red-500 text-white px-3 py-1 rounded-md">
-          <span className="text-sm font-medium">Today&apos;s</span>
+      <div className="mb-2">
+        <div className="flex items-center gap-2">
+          <div className="h-6 w-2 bg-red-500"></div>
+          <span className="text-red-500 font-medium">Today`s</span>
         </div>
       </div>
 
@@ -163,45 +109,46 @@ export default function FlashSales() {
               <div className="text-xs text-gray-500">Seconds</div>
             </div>
           </div>
-
-          <div className="flex items-center gap-4">
-            <button className="swiper-button-prev">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5"
-              >
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-            </button>
-            <button className="swiper-button-next">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5"
-              >
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 
       <div className="relative">
+        {/* Кнопки навигации */}
+        <div className="flex justify-between items-center absolute top-1/2 left-[-50] right-[-50] z-10 px-2 transform -translate-y-1/2 pointer-events-none">
+          <button className="swiper-button-prev bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors pointer-events-auto">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5"
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button className="swiper-button-next bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors pointer-events-auto">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5"
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </div>
+
         <Swiper
           modules={[Navigation]}
           navigation={{
@@ -218,57 +165,69 @@ export default function FlashSales() {
           }}
           className="flash-sales-swiper"
         >
-          {products.map((product) => (
-           <SwiperSlide key={product.id}>
-			  <div className="bg-white rounded-none overflow-hidden relative group border border-gray-100">
-				 {/* Бейдж скидки */}
-				 <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-sm">
-					-{product.discount}%
-				 </div>
-				 
-				 {/* Heart (верхний правый угол) */}
-				 <button className="absolute top-2 right-2 z-10">
-					<Heart className="w-5 h-5 text-gray-600" />
-				 </button>
-				 
-				 {/* Изображение товара */}
-				 <div className="relative h-48 flex items-center justify-center p-4">
-					<Image
-					  src={product.image || "/placeholder.svg"}
-					  alt={product.name}
-					  width={200}
-					  height={200}
-					  className="object-contain max-h-full"
-					/>
-					
-					{/* Eye (под Heart, но не в самом низу) */}
-					<button className="absolute top-12 right-2 z-10"> {/* Изменено с bottom-0 на top-12 */}
-					  <Eye className="w-5 h-5 text-gray-700" />
-					</button>
-				 </div>
-				 
-				 {/* Кнопка Add to Cart (появляется при наведении) */}
-				 <div className="absolute inset-0 flex items-end opacity-0 group-hover:opacity-100 transition-opacity">
-					<Button className="w-full py-2 rounded-none bg-black text-white hover:bg-black/90">
-					  Add To Cart
-					</Button>
-				 </div>
-				 
-				 {/* Информация о товаре */}
-				 <div className="p-4">
-					<h3 className="font-medium text-base mb-1">{product.name}</h3>
-					<div className="flex items-center gap-2 mb-2">
-					  <span className="text-red-500 font-semibold">${product.currentPrice}</span>
-					  <span className="text-gray-400 line-through text-sm">${product.originalPrice}</span>
-					</div>
-					<div className="flex items-center">
-					  <div className="flex mr-1">{renderRating(product.rating)}</div>
-					  <span className="text-gray-500 text-sm">({product.reviews})</span>
-					</div>
-				 </div>
-			  </div>
-			</SwiperSlide>
-          ))}
+          {data?.data?.products.map((product) => {
+            const discountPercentage = calculateDiscountPercentage(product.price, product.discountPrice)
+            
+            return (
+              <SwiperSlide key={product.id}>
+                <div className="bg-white rounded-none overflow-hidden relative group border border-gray-100">
+                  {/* Бейдж скидки */}
+                  {product.hasDiscount && (
+                    <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-sm">
+                      -{discountPercentage}%
+                    </div>
+                  )}
+                  
+                  {/* Heart (верхний правый угол) */}
+                  <div className="absolute z-10 top-1 right-1 flex flex-col gap-2">
+                    <button
+                      onClick={() => setIsWishlisted(!isWishlisted)}
+                      className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors"
+                    >
+                      <Heart className={cn("h-5 w-5", isWishlisted ? "fill-red-500 stroke-red-500" : "stroke-gray-500")} />
+                    </button>
+
+                    <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
+                      <Eye className="h-5 w-5 stroke-gray-500" />
+                    </button>
+                  </div>
+
+                  {/* Изображение товара */}
+                  <div className="relative h-48 flex items-center justify-center p-4">
+                    <img
+                      src={`https://store-api.softclub.tj/images/${product.image}`}
+                      alt={product.productName}
+                      width={200}
+                      height={200}
+                      className="object-contain max-h-full"
+                    />
+                  </div>
+                  
+                  {/* Кнопка Add to Cart (появляется при наведении) */}
+                  <div className="absolute inset-0 flex items-end opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button className="w-full py-2 rounded-none bg-black text-white hover:bg-black/90">
+                      Add To Cart
+                    </Button>
+                  </div>
+                  
+                  {/* Информация о товаре */}
+                  <div className="p-4">
+                    <h3 className="font-medium text-base mb-1">{product.productName}</h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-red-500 font-semibold">${product.discountPrice}</span>
+                      {product.hasDiscount && (
+                        <span className="text-gray-400 line-through text-sm">${product.price}</span>
+                      )}
+                    </div>
+                    <div className="flex items-center">
+                      <div className="flex mr-1">{renderRating(product.rating)}</div>
+                      <span className="text-gray-500 text-sm">54</span>
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+            )
+          })}
         </Swiper>
       </div>
 
