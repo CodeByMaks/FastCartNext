@@ -1,13 +1,57 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Heart, Eye } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/utils"
 
-export default function ProductCard({product}) {
+interface Product {
+  id: string
+  productName: string
+  price: number
+  discountPrice: number
+  isNew?: boolean
+  image: string
+  rating: number
+}
+
+export default function ProductCard({ product }: { product: Product }) {
   const [isWishlisted, setIsWishlisted] = useState(false)
+
+  // Check if product is in wishlist on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]')
+      setIsWishlisted(wishlist.some((item: Product) => item.id === product.id))
+    }
+  }, [product.id])
+
+  // Toggle product in wishlist
+  const toggleWishlist = () => {
+    try {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]')
+      let updatedWishlist = [...wishlist]
+
+      if (isWishlisted) {
+        updatedWishlist = updatedWishlist.filter(item => item.id !== product.id)
+      } else {
+        updatedWishlist.push({
+          id: product.id,
+          productName: product.productName,
+          price: product.price,
+          discountPrice: product.discountPrice,
+          image: product.image,
+          rating: product.rating
+        })
+      }
+
+      localStorage.setItem('wishlist', JSON.stringify(updatedWishlist))
+      setIsWishlisted(!isWishlisted)
+    } catch (error) {
+      console.error("Error updating wishlist:", error)
+    }
+  }
 
   return (
     <div className="bg-gray-50 rounded-lg overflow-hidden group">
@@ -27,7 +71,7 @@ export default function ProductCard({product}) {
 
           <div className="absolute top-0 right-0 flex flex-col gap-2">
             <button
-              onClick={() => setIsWishlisted(!isWishlisted)}
+              onClick={toggleWishlist}
               className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors"
             >
               <Heart className={cn("h-5 w-5", isWishlisted ? "fill-red-500 stroke-red-500" : "stroke-gray-500")} />
@@ -48,8 +92,8 @@ export default function ProductCard({product}) {
         <h3 className="font-medium text-sm mb-1">{product.productName}</h3>
         <div className="flex justify-between items-center mb-2">
           <div className='flex gap-3'>
-          <span className="text-red-500 font-bold">${product.discountPrice}</span>
-          <span className="text-gray-400 line-through font-bold">${product.price}</span>
+            <span className="text-red-500 font-bold">${product.discountPrice}</span>
+            <span className="text-gray-400 line-through font-bold">${product.price}</span>
           </div>
           <div className="flex items-center">
             <div className="flex">

@@ -4,21 +4,47 @@
 import { useState, useEffect } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
-import { Heart, Eye } from "lucide-react"
+import { Heart, Eye, ShoppingCart } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/utils"
 import "swiper/css"
 import "swiper/css/navigation"
 import { useGetProductsQuery } from '@/entities/products/productsApi'
+import { useRouter } from "next/navigation"
+import { useAddProductToCartMutation } from '@/entities/cart/cartApi'
+
+interface Product {
+  id: string
+  productName: string
+  price: number
+  discountPrice: number
+  hasDiscount: boolean
+  image: string
+  rating: number
+}
 
 export default function FlashSales() {
+  const router = useRouter()
   const [days, setDays] = useState(3)
   const [hours, setHours] = useState(23)
   const [minutes, setMinutes] = useState(19)
   const [seconds, setSeconds] = useState(56)
-  const [isWishlisted, setIsWishlisted] = useState(false)
+  const [wishlist, setWishlist] = useState<Product[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('wishlist')
+        const parsed = saved ? JSON.parse(saved) : []
+        return Array.isArray(parsed) ? parsed : []
+      } catch (e) {
+        console.error("Failed to parse wishlist", e)
+        return []
+      }
+    }
+    return []
+  })
 
-  const {data, isLoading, error} = useGetProductsQuery(undefined)
+  const { data, isLoading, error } = useGetProductsQuery(undefined)
+  const [addToCart] = useAddProductToCartMutation()
   
   // Countdown timer logic
   useEffect(() => {
@@ -45,6 +71,24 @@ export default function FlashSales() {
     return () => clearInterval(interval)
   }, [days, hours, minutes, seconds])
 
+  // Save wishlist to localStorage when it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('wishlist', JSON.stringify(wishlist))
+    } catch (e) {
+      console.error("Failed to save wishlist", e)
+    }
+  }, [wishlist])
+
+  // Handle add to cart
+  const handleAddToCart = async (productId: string) => {
+    try {
+      await addToCart({ productId, quantity: 1 }).unwrap()
+    } catch (err) {
+      console.error('Failed to add to cart:', err)
+    }
+  }
+
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading products</div>
 
@@ -56,6 +100,39 @@ export default function FlashSales() {
   // Calculate discount percentage
   const calculateDiscountPercentage = (price: number, discountPrice: number) => {
     return Math.round(((price - discountPrice) / price) * 100)
+  }
+
+  // Check if product is in wishlist
+  const isInWishlist = (productId: string) => {
+    return Array.isArray(wishlist) && wishlist.some(item => item?.id === productId)
+  }
+
+  // Toggle product in wishlist
+  const toggleWishlist = (product: Product) => {
+    try {
+      setWishlist(prev => {
+        if (!Array.isArray(prev)) return []
+        const isAlreadyInWishlist = prev.some(item => item?.id === product.id)
+        if (isAlreadyInWishlist) {
+          return prev.filter(item => item?.id !== product.id)
+        } else {
+          return [...prev, product]
+        }
+      })
+    
+    } catch (e) {
+      console.error("Failed to update wishlist", e)
+    }
+  }
+
+  // Navigate to wishlist page
+  const navigateToWishlist = () => {
+    router.push('/wishlist')
+  }
+
+  // Navigate to cart page
+  const navigateToCart = () => {
+    router.push('/cart')
   }
 
   // Render star ratings
@@ -113,7 +190,6 @@ export default function FlashSales() {
       </div>
 
       <div className="relative">
-        {/* Кнопки навигации */}
         <div className="flex justify-between items-center absolute top-1/2 left-[-50] right-[-50] z-10 px-2 transform -translate-y-1/2 pointer-events-none">
           <button className="swiper-button-prev bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors pointer-events-auto">
             <svg
@@ -165,26 +241,32 @@ export default function FlashSales() {
           }}
           className="flash-sales-swiper"
         >
-          {data?.data?.products.map((product) => {
+          {data?.data?.products?.map((product) => {
             const discountPercentage = calculateDiscountPercentage(product.price, product.discountPrice)
             
             return (
               <SwiperSlide key={product.id}>
                 <div className="bg-white rounded-none overflow-hidden relative group border border-gray-100">
-                  {/* Бейдж скидки */}
                   {product.hasDiscount && (
                     <div className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-sm">
                       -{discountPercentage}%
                     </div>
                   )}
                   
-                  {/* Heart (верхний правый угол) */}
                   <div className="absolute z-10 top-1 right-1 flex flex-col gap-2">
                     <button
-                      onClick={() => setIsWishlisted(!isWishlisted)}
+                      onClick={() => toggleWishlist({
+                        id: product.id,
+                        productName: product.productName,
+                        price: product.price,
+                        discountPrice: product.discountPrice,
+                        hasDiscount: product.hasDiscount,
+                        image: product.image,
+                        rating: product.rating
+                      })}
                       className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors"
                     >
-                      <Heart className={cn("h-5 w-5", isWishlisted ? "fill-red-500 stroke-red-500" : "stroke-gray-500")} />
+                      <Heart className={cn("h-5 w-5", isInWishlist(product.id) ? "fill-red-500 stroke-red-500" : "stroke-gray-500")} />
                     </button>
 
                     <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
@@ -192,7 +274,6 @@ export default function FlashSales() {
                     </button>
                   </div>
 
-                  {/* Изображение товара */}
                   <div className="relative h-48 flex items-center justify-center p-4">
                     <img
                       src={`https://store-api.softclub.tj/images/${product.image}`}
@@ -203,14 +284,16 @@ export default function FlashSales() {
                     />
                   </div>
                   
-                  {/* Кнопка Add to Cart (появляется при наведении) */}
-                  <div className="absolute inset-0 flex items-end opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button className="w-full py-2 rounded-none bg-black text-white hover:bg-black/90">
+                  <div className="w-full absolute top-40 flex items-end opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button 
+                      className="w-full py-2 rounded-none bg-black text-white hover:bg-black/90 flex items-center justify-center gap-2"
+                      onClick={() => handleAddToCart(product.id)}
+                    >
+                      <ShoppingCart className="h-4 w-4" />
                       Add To Cart
                     </Button>
                   </div>
                   
-                  {/* Информация о товаре */}
                   <div className="p-4">
                     <h3 className="font-medium text-base mb-1">{product.productName}</h3>
                     <div className="flex items-center gap-2 mb-2">
@@ -231,8 +314,19 @@ export default function FlashSales() {
         </Swiper>
       </div>
 
-      <div className="flex justify-center mt-8">
-        <Button className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded">View All Products</Button>
+      <div className="flex justify-center gap-4 mt-8">
+        <Button 
+          className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded"
+          onClick={navigateToWishlist}
+        >
+          View Wishlist
+        </Button>
+        <Button 
+          className="bg-black hover:bg-black/90 text-white px-8 py-2 rounded"
+          onClick={navigateToCart}
+        >
+          View Cart
+        </Button>
       </div>
     </div>
   )
