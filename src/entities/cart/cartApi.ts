@@ -3,11 +3,11 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const cartApi = createApi({
   reducerPath: 'cartApi',
   baseQuery: fetchBaseQuery({ 
-    baseUrl: '/api/',
+    baseUrl: 'https://store-api.softclub.tj/',
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('token')
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`)
+        headers.set('access_token', `Bearer ${token}`)
       }
       return headers
     }
@@ -22,40 +22,36 @@ export const cartApi = createApi({
 
     // Добавить продукт в корзину
     addProductToCart: builder.mutation({
-      query: (body) => ({
-        url: 'Cart/add-product-to-cart',
-        method: 'POST',
-        body
+      query: (productId) => ({
+        url: `Cart/add-product-to-cart?id=${productId}`,
+        method: 'POST'
       }),
       invalidatesTags: ['Cart']
     }),
 
     // Увеличить количество продукта в корзине
     increaseProductInCart: builder.mutation({
-      query: (body) => ({
-        url: 'Cart/increase-product-in-cart',
+      query: (id) => ({
+        url: `Cart/increase-product-in-cart?id=${id}`,
         method: 'PUT',
-        body
       }),
       invalidatesTags: ['Cart']
     }),
 
     // Уменьшить количество продукта в корзине
     reduceProductInCart: builder.mutation({
-      query: (body) => ({
-        url: 'Cart/reduce-product-in-cart',
+      query: (id) => ({
+        url: `Cart/reduce-product-in-cart?id=${id}`,
         method: 'PUT',
-        body
       }),
       invalidatesTags: ['Cart']
     }),
 
     // Удалить продукт из корзины
     deleteProductFromCart: builder.mutation({
-      query: (body) => ({
-        url: 'Cart/delete-product-from-cart',
+      query: (id) => ({
+        url: `Cart/delete-product-from-cart?id=${id}`,
         method: 'DELETE',
-        body
       }),
       invalidatesTags: ['Cart']
     }),

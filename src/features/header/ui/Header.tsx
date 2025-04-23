@@ -33,15 +33,13 @@ export const Header = () => {
     try {
       const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]')
       setWishlistCount(wishlist.length)
-      console.log('Wishlist updated:', wishlist) // Добавлено для отладки
     } catch (error) {
       console.error("Error reading wishlist:", error)
     }
   }
 
   useEffect(() => {
-    setIsMounted(true)
-    
+    setIsMounted(true) 
     // Initial load
     updateWishlistCount()
 

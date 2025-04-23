@@ -1,58 +1,24 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
-
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { ProductTable } from '@/widgets/cart/product-table'
 import { CartTotal } from '@/widgets/cart/cart-total'
+import { useGetCartProductsQuery } from '@/entities/cart/cartApi'
 
 export default function ShoppingCart() {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "LCD Monitor",
-      price: 650,
-      quantity: 1,
-      image: "/placeholder.svg?height=64&width=64",
-    },
-    {
-      id: 2,
-      name: "HI Gamepad",
-      price: 550,
-      quantity: 2,
-      image: "/placeholder.svg?height=64&width=64",
-    },
-  ])
-
-  const [couponCode, setCouponCode] = useState("")
-
-  const handleUpdateQuantity = (id: number, quantity: number) => {
-    setProducts(products.map((product) => (product.id === id ? { ...product, quantity } : product)))
-  }
-
-  const handleRemoveItem = (id: number) => {
-    setProducts(products.filter((product) => product.id !== id))
-  }
-
-  const handleRemoveAll = () => {
-    setProducts([])
-  }
+  const {data, isLoading, error} = useGetCartProductsQuery()
 
   const handleUpdateCart = () => {
     console.log("Cart updated")
-  }
-
-  const handleApplyCoupon = () => {
-    console.log("Applying coupon:", couponCode)
   }
 
   const handleCheckout = () => {
     console.log("Proceeding to checkout")
   }
 
-  const subtotal = products.reduce((sum, product) => sum + product.price * product.quantity, 0)
+  const subtotal = data?.data[0]?.productsInCart.reduce((sum, product) => sum + product.product.price * product.product.quantity, 0)
   const shipping = "Free"
   const total = subtotal
 
@@ -70,9 +36,7 @@ export default function ShoppingCart() {
       {/* Product Table - Full Width */}
       <div className="mb-8">
         <ProductTable 
-          products={products} 
-          onUpdateQuantity={handleUpdateQuantity} 
-          onRemoveItem={handleRemoveItem} 
+          products={data?.data[0]?.productsInCart || []} 
         />
       </div>
 
@@ -88,7 +52,7 @@ export default function ShoppingCart() {
             <Button variant="outline" onClick={handleUpdateCart}>
               Update Cart
             </Button>
-            <Button variant="outline" className="text-destructive hover:bg-destructive/10" onClick={handleRemoveAll}>
+            <Button variant="outline" className="text-destructive hover:bg-destructive/10">
               Remove all
             </Button>
           </div>
@@ -99,10 +63,8 @@ export default function ShoppingCart() {
               <Input
                 placeholder="Enter coupon code"
                 className="h-10"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
               />
-              <Button variant="outline" className="h-10" onClick={handleApplyCoupon}>
+              <Button variant="outline" className="h-10">
                 Apply
               </Button>
             </div>

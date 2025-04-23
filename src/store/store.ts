@@ -1,3 +1,4 @@
+import { authApi } from '@/entities/auth/authApi'
 import { cartApi } from '@/entities/cart/cartApi'
 import { categoryApi } from '@/entities/category/categoryApi'
 import { productsApi } from '@/entities/products/productsApi'
@@ -8,12 +9,14 @@ export const store = configureStore({
 	[categoryApi.reducerPath]: categoryApi.reducer,
 	[productsApi.reducerPath]: productsApi.reducer,
 	[cartApi.reducerPath]: cartApi.reducer,
+   [authApi.reducerPath]: authApi.reducer,
   },
   middleware: (getDefaultMiddleware) => 
 	 getDefaultMiddleware().concat(
 		categoryApi.middleware,
 		productsApi.middleware,
 		cartApi.middleware,
+		authApi.middleware,
 	),
 })
 

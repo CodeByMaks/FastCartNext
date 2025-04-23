@@ -3,11 +3,74 @@ import Link from "next/link"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { Card, CardContent, CardHeader } from "@/shared/ui/card"
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useRegisterMutation } from "@/entities/auth/authApi"
+import { useState } from "react"
+import { Loader2 } from "lucide-react"
 
 export default function SignUpPage() {
-    const pathname = usePathname()
-    const locale = pathname.split('/')[1]
+  const pathname = usePathname()
+  const locale = pathname.split('/')[1]
+  const router = useRouter()
+  const [register, { isLoading, error }] = useRegisterMutation()
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }))
+    // Clear error when user types
+    if (errors[id]) {
+      setErrors(prev => ({ ...prev, [id]: '' }))
+    }
+  }
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {}
+    
+    if (!formData.name.trim()) newErrors.name = 'Name is required'
+    if (!formData.email.trim()) newErrors.email = 'Email is required'
+    if (!formData.password) newErrors.password = 'Password is required'
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!validateForm()) return
+    
+    try {
+      const response = await register({
+        username: formData.email,
+        email: formData.email,
+        password: formData.password,
+        name: formData.name
+      }).unwrap()
+      
+      // Save token and redirect
+      localStorage.setItem('access_token', response?.data)
+      router.push(`/${locale}`)
+    } catch (err) {
+      console.error('Registration failed:', err)
+      // Handle API errors (like duplicate email)
+      if ('data' in err && typeof err.data === 'object' && err.data !== null) {
+        setErrors(prev => ({ ...prev, ...(err.data as Record<string, string>) }))
+      }
+    }
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -17,12 +80,81 @@ export default function SignUpPage() {
           <p className="text-sm text-muted-foreground">Enter your details below</p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-4">
-            <Input type="text" placeholder="Name" />
-            <Input type="text" placeholder="Email or phone number" />
-            <Input type="password" placeholder="Password" />
-          </div>
-          <Button className="w-full bg-red-500 hover:bg-red-600">Create Account</Button>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-4">
+              <div>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className={errors.name ? 'border-red-500' : ''}
+                />
+                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+              </div>
+              
+              <div>
+                <Input
+                  id="email"
+                  type="text"
+                  placeholder="Email or phone number"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={errors.email ? 'border-red-500' : ''}
+                />
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+              </div>
+              
+              <div>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={errors.password ? 'border-red-500' : ''}
+                />
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+              </div>
+              
+              <div>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className={errors.confirmPassword ? 'border-red-500' : ''}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
+                )}
+              </div>
+            </div>
+
+            {error && (
+              <div className="text-red-500 text-sm">
+                {"data" in error ? (error.data as { message?: string }).message || "Registration failed" : "Registration failed"}
+              </div>
+            )}
+
+            <Button 
+              type="submit" 
+              className="w-full bg-red-500 hover:bg-red-600"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                'Create Account'
+              )}
+            </Button>
+          </form>
+
           <Button variant="outline" className="w-full flex items-center justify-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 48 48">
               <path

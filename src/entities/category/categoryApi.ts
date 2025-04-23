@@ -7,7 +7,7 @@ export const categoryApi = createApi({
 		prepareHeaders: (headers) => {
 			const token = localStorage.getItem('token')
 			if (token) {
-			  headers.set('Authorization', `Bearer ${token}`)
+			  headers.set('access_token', `Bearer ${token}`)
 			}
 			return headers
 		 } 

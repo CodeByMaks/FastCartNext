@@ -2,12 +2,48 @@
 
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
+import { useLoginMutation } from "@/entities/auth/authApi"
+import { useRouter } from "next/navigation"
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  })
+  const [login, { isLoading, error }] = useLoginMutation()
+  const router = useRouter()
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword)
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    try {
+      // Отправляем данные для авторизации
+      const response = await login({
+        username: formData.email,
+        password: formData.password
+      }).unwrap()
+      
+      // Сохраняем токен в localStorage
+      localStorage.setItem('access_token', response?.data)
+      
+      // Перенаправляем пользователя
+      router.push('/') // или на другую страницу после успешного входа
+    } catch (err) {
+      console.error('Login failed:', err)
+    }
   }
 
   return (
@@ -17,7 +53,7 @@ export default function LoginForm() {
         <p className="text-sm text-gray-600">Enter your details below</p>
       </div>
 
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="space-y-1">
           <label htmlFor="email" className="text-xs text-gray-500">
             Email or phone number
@@ -26,6 +62,9 @@ export default function LoginForm() {
             id="email"
             type="text"
             className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+            value={formData.email}
+            onChange={handleChange}
+            required
           />
         </div>
 
@@ -38,6 +77,9 @@ export default function LoginForm() {
               id="password"
               type={showPassword ? "text" : "password"}
               className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
+              value={formData.password}
+              onChange={handleChange}
+              required
             />
             <button
               type="button"
@@ -55,11 +97,18 @@ export default function LoginForm() {
           </a>
         </div>
 
+        {error && (
+          <div className="text-red-500 text-sm">
+            {"data" in error ? (error.data as { message?: string }).message || "Login failed" : "Login failed"}
+          </div>
+        )}
+
         <button
           type="submit"
-          className="w-full bg-red-500 text-white rounded py-3 font-medium hover:bg-red-600 transition-colors"
+          className="w-full bg-red-500 text-white rounded py-3 font-medium hover:bg-red-600 transition-colors disabled:opacity-50"
+          disabled={isLoading}
         >
-          Log In
+          {isLoading ? "Logging in..." : "Log In"}
         </button>
       </form>
     </div>

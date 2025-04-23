@@ -4,14 +4,14 @@
 import { useState, useEffect } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation } from "swiper/modules"
-import { Heart, Eye, ShoppingCart } from "lucide-react"
+import { Heart, Eye } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { cn } from "@/shared/lib/utils"
 import "swiper/css"
 import "swiper/css/navigation"
 import { useGetProductsQuery } from '@/entities/products/productsApi'
-import { useRouter } from "next/navigation"
-import { useAddProductToCartMutation } from '@/entities/cart/cartApi'
+import { usePathname, useRouter } from "next/navigation"
+import { useAddProductToCartMutation, useGetCartProductsQuery } from '@/entities/cart/cartApi'
 
 interface Product {
   id: string
@@ -43,8 +43,12 @@ export default function FlashSales() {
     return []
   })
 
-  const { data, isLoading, error } = useGetProductsQuery(undefined)
-  const [addToCart] = useAddProductToCartMutation()
+  const {data, isLoading, error} = useGetProductsQuery(undefined)
+  const [addProductToCart] = useAddProductToCartMutation()
+  const {refetch} = useGetCartProductsQuery(undefined)
+
+    const pathname = usePathname()
+    const locale = pathname.split('/')[1]
   
   // Countdown timer logic
   useEffect(() => {
@@ -80,15 +84,6 @@ export default function FlashSales() {
     }
   }, [wishlist])
 
-  // Handle add to cart
-  const handleAddToCart = async (productId: string) => {
-    try {
-      await addToCart({ productId, quantity: 1 }).unwrap()
-    } catch (err) {
-      console.error('Failed to add to cart:', err)
-    }
-  }
-
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading products</div>
 
@@ -119,20 +114,25 @@ export default function FlashSales() {
           return [...prev, product]
         }
       })
-    
     } catch (e) {
       console.error("Failed to update wishlist", e)
     }
   }
 
-  // Navigate to wishlist page
-  const navigateToWishlist = () => {
-    router.push('/wishlist')
+  const addProduct = async(id: number | string) => {
+    try {
+      await addProductToCart({ productId: id }).unwrap()
+      refetch()
+      console.log(id);
+    } catch (error) {
+      console.error(error);
+      
+    }
   }
 
-  // Navigate to cart page
-  const navigateToCart = () => {
-    router.push('/cart')
+  // Navigate to wishlist page
+  const navigateToWishlist = () => {
+    router.push(`${locale}/wishlist`)
   }
 
   // Render star ratings
@@ -285,11 +285,7 @@ export default function FlashSales() {
                   </div>
                   
                   <div className="w-full absolute top-40 flex items-end opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button 
-                      className="w-full py-2 rounded-none bg-black text-white hover:bg-black/90 flex items-center justify-center gap-2"
-                      onClick={() => handleAddToCart(product.id)}
-                    >
-                      <ShoppingCart className="h-4 w-4" />
+                    <Button onClick={()=> addProduct(product.id)} className="w-full py-2 rounded-none bg-black text-white hover:bg-black/90">
                       Add To Cart
                     </Button>
                   </div>
@@ -314,18 +310,12 @@ export default function FlashSales() {
         </Swiper>
       </div>
 
-      <div className="flex justify-center gap-4 mt-8">
+      <div className="flex justify-center mt-8">
         <Button 
           className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded"
           onClick={navigateToWishlist}
         >
           View Wishlist
-        </Button>
-        <Button 
-          className="bg-black hover:bg-black/90 text-white px-8 py-2 rounded"
-          onClick={navigateToCart}
-        >
-          View Cart
         </Button>
       </div>
     </div>

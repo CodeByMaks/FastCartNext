@@ -14,7 +14,7 @@ export default function CategorySwiper() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const swiperRef = useRef<SwiperType | null>(null)
 
-  const {data, error, isLoading} = useGetCategoriesQuery()
+  const {data, error, isLoading} = useGetCategoriesQuery(undefined)
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error loading categories</div>
 
