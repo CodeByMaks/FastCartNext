@@ -2,6 +2,7 @@
 import { useGetProductsQuery } from '@/entities/products/productsApi'
 import { Button } from "@/shared/ui/button"
 import ProductCard from '@/widgets/products/product-card'
+import Link from 'next/link'
 
 export default function ExploreProducts() {
   const {data, isLoading, error} = useGetProductsQuery()
@@ -25,7 +26,9 @@ export default function ExploreProducts() {
       </div>
 
       <div className="flex justify-center mt-10">
+        <Link href={'/en/products'}>
         <Button className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded">View All Products</Button>
+        </Link>
       </div>
     </div>
   )

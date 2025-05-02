@@ -1,6 +1,7 @@
 import { useGetProductsQuery } from '@/entities/products/productsApi'
 import { Button } from '@/shared/ui/button'
 import ProductCard from '@/widgets/products/product-card'
+import Link from 'next/link'
 
 
 export const BestProducts = () => {
@@ -19,7 +20,9 @@ export const BestProducts = () => {
 
 		<div className='flex items-center justify-between'>
 			<h2 className='text-3xl font-bold'>Best Selling Products</h2>
-			<Button>View All</Button>
+			<Link href='en/products'>
+				<Button>View All</Button>
+			</Link>
 		</div>
 
 		<div className="py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

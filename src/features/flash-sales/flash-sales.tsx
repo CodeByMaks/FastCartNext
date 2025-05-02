@@ -12,6 +12,7 @@ import "swiper/css/navigation"
 import { useGetProductsQuery } from '@/entities/products/productsApi'
 import { usePathname, useRouter } from "next/navigation"
 import { useAddProductToCartMutation, useGetCartProductsQuery } from '@/entities/cart/cartApi'
+import Link from 'next/link'
 
 interface Product {
   id: string
@@ -121,7 +122,7 @@ export default function FlashSales() {
 
   const addProduct = async(id: number | string) => {
     try {
-      await addProductToCart({ productId: id }).unwrap()
+      await addProductToCart( id ).unwrap()
       refetch()
       console.log(id);
     } catch (error) {
@@ -268,10 +269,12 @@ export default function FlashSales() {
                     >
                       <Heart className={cn("h-5 w-5", isInWishlist(product.id) ? "fill-red-500 stroke-red-500" : "stroke-gray-500")} />
                     </button>
-
-                    <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
-                      <Eye className="h-5 w-5 stroke-gray-500" />
-                    </button>
+                    
+                      <Link href={'en/products/' + product.id}>
+                        <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
+                          <Eye className="h-5 w-5 stroke-gray-500" />
+                        </button>
+                      </Link>
                   </div>
 
                   <div className="relative h-48 flex items-center justify-center p-4">

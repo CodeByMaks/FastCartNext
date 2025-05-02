@@ -22,9 +22,9 @@ export const cartApi = createApi({
 
     // Добавить продукт в корзину
     addProductToCart: builder.mutation({
-      query: (productId) => ({
-        url: `Cart/add-product-to-cart?id=${productId}`,
-        method: 'POST'
+      query: (id) => ({
+        url: `Cart/add-product-to-cart?id=${id}`,
+        method: 'POST',
       }),
       invalidatesTags: ['Cart']
     }),
