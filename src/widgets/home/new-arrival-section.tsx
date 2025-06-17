@@ -1,5 +1,5 @@
 import Link from "next/link"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import ps from '@/assets/ps5-slim-goedkope-playstation_large 1.png'
 import woman from '@/assets/attractive-woman-wearing-hat-posing-black-background 1.png'
 import amasecho from '@/assets/69-694768_amazon-echo-png-clipart-transparent-amazon-echo-png 1.png'
@@ -26,6 +26,7 @@ export default function NewArrivalSection() {
             width={600}
             height={500}
             className="object-cover"
+            priority
           />
           <div className="absolute bottom-0 left-0 p-6">
             <h3 className="text-2xl font-bold mb-1">PlayStation 5</h3>

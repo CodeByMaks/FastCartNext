@@ -5,11 +5,13 @@ export const cartApi = createApi({
   baseQuery: fetchBaseQuery({ 
     baseUrl: 'https://store-api.softclub.tj/',
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token')
-      if (token) {
-        headers.set('access_token', `Bearer ${token}`)
+      if (typeof window !== 'undefined') {
+        const token = localStorage.getItem('token');
+        if (token) {
+          headers.set('Authorization', `Bearer ${token}`);
+        }
       }
-      return headers
+      return headers;
     }
   }),
   tagTypes: ['Cart'],

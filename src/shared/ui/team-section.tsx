@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import Link from "next/link"
 import { Facebook, Instagram, Linkedin, ChevronLeft, ChevronRight } from "lucide-react"
 import onePhoto from '@/assets/Frame 874.png'

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
@@ -13,6 +14,7 @@ import { useGetProductsQuery } from '@/entities/products/productsApi'
 import { usePathname, useRouter } from "next/navigation"
 import { useAddProductToCartMutation, useGetCartProductsQuery } from '@/entities/cart/cartApi'
 import Link from 'next/link'
+import { toast } from "react-hot-toast"
 
 interface Product {
   id: string
@@ -44,13 +46,13 @@ export default function FlashSales() {
     return []
   })
 
-  const {data, isLoading, error} = useGetProductsQuery(undefined)
-  const [addProductToCart] = useAddProductToCartMutation()
-  const {refetch} = useGetCartProductsQuery(undefined)
+  const { data, isLoading, error } = useGetProductsQuery(undefined)
+  const [addProductToCart, { isLoading: isAddingToCart }] = useAddProductToCartMutation()
+  const { refetch } = useGetCartProductsQuery(undefined)
 
-    const pathname = usePathname()
-    const locale = pathname.split('/')[1]
-  
+  const pathname = usePathname()
+  const locale = pathname.split('/')[1]
+
   // Countdown timer logic
   useEffect(() => {
     const interval = setInterval(() => {
@@ -100,34 +102,35 @@ export default function FlashSales() {
 
   // Check if product is in wishlist
   const isInWishlist = (productId: string) => {
-    return Array.isArray(wishlist) && wishlist.some(item => item?.id === productId)
+    return wishlist.some(item => item?.id === productId)
   }
 
   // Toggle product in wishlist
   const toggleWishlist = (product: Product) => {
-    try {
-      setWishlist(prev => {
-        if (!Array.isArray(prev)) return []
-        const isAlreadyInWishlist = prev.some(item => item?.id === product.id)
-        if (isAlreadyInWishlist) {
-          return prev.filter(item => item?.id !== product.id)
-        } else {
-          return [...prev, product]
-        }
-      })
-    } catch (e) {
-      console.error("Failed to update wishlist", e)
-    }
+    setWishlist(prev => {
+      const isAlreadyInWishlist = prev.some(item => item?.id === product.id)
+      if (isAlreadyInWishlist) {
+        return prev.filter(item => item?.id !== product.id)
+      } else {
+        return [...prev, product]
+      }
+    })
   }
 
-  const addProduct = async(id: number | string) => {
+  const addProduct = async (id: string) => {
     try {
-      await addProductToCart( id ).unwrap()
+      const result = await addProductToCart(id).unwrap()
+      toast.success("Product added to cart!")
       refetch()
-      console.log(id);
-    } catch (error) {
-      console.error(error);
+      console.log("Added to cart:", result)
+    } catch (error: any) {
+      console.error("Failed to add to cart:", error)
+      toast.error(error.data?.message || "Failed to add product to cart")
       
+      // Если ошибка авторизации, перенаправляем на страницу входа
+      if (error.status === 401) {
+        router.push(`${locale}/login`)
+      }
     }
   }
 
@@ -270,11 +273,11 @@ export default function FlashSales() {
                       <Heart className={cn("h-5 w-5", isInWishlist(product.id) ? "fill-red-500 stroke-red-500" : "stroke-gray-500")} />
                     </button>
                     
-                      <Link href={'en/products/' + product.id}>
-                        <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
-                          <Eye className="h-5 w-5 stroke-gray-500" />
-                        </button>
-                      </Link>
+                    <Link href={`${locale}/products/${product.id}`}>
+                      <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
+                        <Eye className="h-5 w-5 stroke-gray-500" />
+                      </button>
+                    </Link>
                   </div>
 
                   <div className="relative h-48 flex items-center justify-center p-4">
@@ -288,8 +291,15 @@ export default function FlashSales() {
                   </div>
                   
                   <div className="w-full absolute top-40 flex items-end opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button onClick={()=> addProduct(product.id)} className="w-full py-2 rounded-none bg-black text-white hover:bg-black/90">
-                      Add To Cart
+                    <Button 
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        addProduct(product.id)
+                      }}
+                      disabled={isAddingToCart}
+                      className="w-full py-2 rounded-none bg-black text-white hover:bg-black/90"
+                    >
+                      {isAddingToCart ? "Adding..." : "Add To Cart"}
                     </Button>
                   </div>
                   

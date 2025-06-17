@@ -1,5 +1,4 @@
 'use client'
-
 import logo from '@/assets/Group 1116606595.png'
 import { LanguageSelect } from '@/widgets/language-switcher/LanguageSelect'
 import {
@@ -13,7 +12,7 @@ import {
   X,
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -89,7 +88,6 @@ export const Header = () => {
   return (
     <header className='py-4 border-b-2 relative'>
       <div className='w-[90%] md:w-[85%] m-auto flex justify-between items-center'>
-        {/* Logo and menu button - unchanged */}
         <div className='flex items-center gap-4'>
           {isMounted && (
             <button
@@ -102,7 +100,7 @@ export const Header = () => {
           )}
           <div className='w-32 md:w-auto'>
             <Link href={`/${locale}`}>
-              <Image src={logo} alt='Logo' layout='responsive' />
+              <Image src={logo} alt='Logo'  />
             </Link>
           </div>
         </div>
@@ -132,7 +130,7 @@ export const Header = () => {
           <Link href={`/${locale}`}>{t('Home')}</Link>
           <Link href={`/${locale}/contact`}>{t('Contact')}</Link>
           <Link href={`/${locale}/about`}>{t('About')}</Link>
-          <Link href={`/${locale}/auth/signup`}>{t('SignUp')}</Link>
+          <Link href={`/${locale}/signup`}>{t('SignUp')}</Link>
         </nav>
 
         <div className='flex gap-2 sm:gap-4 items-center'>

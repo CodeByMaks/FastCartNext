@@ -8,7 +8,8 @@ import { CartTotal } from '@/widgets/cart/cart-total'
 import { useGetCartProductsQuery } from '@/entities/cart/cartApi'
 
 export default function ShoppingCart() {
-  const {data, isLoading, error} = useGetCartProductsQuery()
+  const {data} = useGetCartProductsQuery()
+
 
   const handleUpdateCart = () => {
     console.log("Cart updated")

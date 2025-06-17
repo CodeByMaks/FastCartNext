@@ -8,6 +8,7 @@ import '@/app/globals.css'
 import Footer from '@/features/footer/ui/Footer'
 import { Header } from '@/features/header/ui/Header'
 import { Providers } from '../Providers'
+import '../globals.css'
 
 const messagesMap = { en, ru, tj }
 
@@ -15,13 +16,15 @@ export function generateStaticParams() {
   return locales.map(locale => ({ locale }))
 }
 
-export default function LocaleLayout({
+export default async function LocaleLayout({
   children,
-  params: { locale },
+  params,
 }: {
   children: ReactNode
   params: { locale: string }
 }) {
+  const { locale } = await Promise.resolve(params) // 👈 фикс ошибки
+
   if (!locales.includes(locale as Locale)) notFound()
 
   const typedLocale = locale as Locale

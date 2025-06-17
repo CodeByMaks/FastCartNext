@@ -7,7 +7,7 @@ export const productsApi = createApi({
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('token')
       if (token) {
-        headers.set('access_token', `Bearer ${token}`)
+        headers.set('Authorization', `Bearer ${token}`)
       }
       return headers
     } 

@@ -6,21 +6,21 @@ import { productsApi } from '@/entities/products/productsApi'
 import { configureStore } from '@reduxjs/toolkit'
 
 export const store = configureStore({
-  reducer: {
-	[categoryApi.reducerPath]: categoryApi.reducer,
-	[productsApi.reducerPath]: productsApi.reducer,
-	[cartApi.reducerPath]: cartApi.reducer,
-   [authApi.reducerPath]: authApi.reducer,
-	[productApi.reducerPath]: productApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) => 
-	 getDefaultMiddleware().concat(
-		categoryApi.middleware,
-		productsApi.middleware,
-		cartApi.middleware,
-		authApi.middleware,
-		productApi.middleware,
-	),
+	reducer: {
+		[categoryApi.reducerPath]: categoryApi.reducer,
+		[productsApi.reducerPath]: productsApi.reducer,
+		[cartApi.reducerPath]: cartApi.reducer,
+		[authApi.reducerPath]: authApi.reducer,
+		[productApi.reducerPath]: productApi.reducer,
+	},
+	middleware: getDefaultMiddleware =>
+		getDefaultMiddleware().concat(
+			categoryApi.middleware,
+			productsApi.middleware,
+			cartApi.middleware,
+			authApi.middleware,
+			productApi.middleware
+		),
 })
 
 export type RootState = ReturnType<typeof store.getState>

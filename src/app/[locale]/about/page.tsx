@@ -1,4 +1,4 @@
-import Image from "next/image"
+import Image from "next/legacy/image"
 import Link from "next/link"
 import TeamSection from "@/shared/ui/team-section"
 import group from '@/assets/Side Image.png'
@@ -36,7 +36,6 @@ export default function AboutPage() {
             <Image
               src={group}
               alt="Team members"
-              fill
               className="object-cover rounded-md bg-pink-400"
             />
           </div>

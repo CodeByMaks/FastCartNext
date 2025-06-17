@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { useGetProductByIdQuery } from '@/entities/productByID/productByIdApi'
@@ -11,8 +12,9 @@ import { Separator } from "@/shared/ui/separator"
 import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group"
 import { Label } from "@/shared/ui/label"
 import { Input } from "@/shared/ui/input"
+import AuthGuard from '@/features/authGuard/AuthGuard'
 
-const page = () => {
+const Page = () => {
 	const params = useParams()
 	const productId = Number(params.id)
 
@@ -30,6 +32,8 @@ const page = () => {
 	}
 
    return (
+		<AuthGuard>
+			
 		<div className="w-[85%] container mx-auto px-4 py-8 mb-28">
 		  {/* Breadcrumbs */}
 		  <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-8">
@@ -49,7 +53,7 @@ const page = () => {
 			 <div className="flex flex-col md:flex-row gap-4">
 				{/* Thumbnails */}
 				<div className="flex md:flex-col gap-2 order-2 md:order-1">
-				  {data?.data?.images?.map((i) => (
+				  {data?.data?.images?.map((i:any) => (
 					 <div key={i} className="border rounded-md overflow-hidden w-20 h-20 cursor-pointer hover:border-primary">
 						<img
 						  src={`https://store-api.softclub.tj/images/${i.images}`}
@@ -201,7 +205,8 @@ const page = () => {
 			 </div>
 		  </div>
 		</div>
+		</AuthGuard>
 	 )
 }
 
-export default page
+export default Page

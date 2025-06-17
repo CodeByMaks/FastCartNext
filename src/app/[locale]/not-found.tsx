@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/shared/ui/button'
 import { useRouter } from 'next/navigation'
-import './globals.css'
+import '../globals.css'
 
 const NotFound = () => {
 	const navigate = useRouter()

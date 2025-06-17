@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { useGetCategoriesQuery } from '@/entities/category/categoryApi'
@@ -128,7 +128,6 @@ export function ProductSlider() {
                   <Image
                     src={slide.image || "/placeholder.svg"}
                     alt={slide.title}
-                    fill
                     className="object-contain"
                     priority={index === 0}
                   />

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import beets from '@/assets/Frame 694.png'
 
 export default function SpeakerPromo() {
